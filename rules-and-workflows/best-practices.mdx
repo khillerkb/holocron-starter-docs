@@ -1,0 +1,513 @@
+---
+title: 'Best Practices'
+description: 'Proven patterns and guidelines for creating effective rules and workflows'
+icon: 'award'
+---
+
+# Best Practices
+
+Learn from proven patterns and avoid common pitfalls when building rules and workflows. These guidelines help you create maintainable, performant, and reliable automation.
+
+## Design Principles
+
+<Steps>
+<Step title="Start Simple">
+Begin with basic rules and simple workflows. Complex automation often starts simple and grows organically.
+
+<Info>
+**Rule of Thumb:** If you can't explain your automation logic in plain English, it's probably too complex.
+</Info>
+
+```yaml
+✅ Good: Simple, clear logic
+name: "Notify Low Inventory"
+condition: "inventory < 10"
+action: "send_alert('inventory@company.com')"
+
+❌ Complex: Hard to understand
+name: "Complex Inventory Rule"
+condition: "(inventory < 10 AND (season == 'peak' OR supplier_lead_time > 5)) OR (inventory < 5 AND supplier_reliability < 0.8)"
+action: "if (time_of_day < '17:00') send_alert('inventory@company.com') else create_task('urgent_reorder')"
+```
+</Step>
+
+<Step title="Focus on Business Value">
+Every rule and workflow should solve a real business problem or improve a process.
+
+<Check>
+**Before creating automation, ask:**
+- What problem does this solve?
+- Who benefits from this automation?
+- How much time/effort does it save?
+- What happens if this fails?
+</Check>
+</Step>
+
+<Step title="Design for Failure">
+Assume things will go wrong and plan accordingly.
+
+<Warning>
+**Common failure points:**
+- External API timeouts
+- Data validation errors
+- System maintenance windows
+- Rate limiting
+- Network connectivity issues
+</Warning>
+</Step>
+</Steps>
+
+## Rule Best Practices
+
+### Naming Conventions
+
+Use clear, descriptive names that explain the rule's purpose:
+
+<CodeGroup>
+```yaml ❌ Poor Names
+name: "Rule1"
+name: "Email Trigger"
+name: "Data Check"
+name: "Process Orders"
+```
+
+```yaml ✅ Good Names
+name: "Send Welcome Email to New Customers"
+name: "Flag Orders Over $10K for Manager Review"
+name: "Alert When Inventory Drops Below Safety Stock"
+name: "Auto-Approve Expense Reports Under $500"
+```
+</CodeGroup>
+
+### Condition Design
+
+<AccordionGroup>
+<Accordion title="Use Specific Triggers">
+Be as specific as possible with trigger conditions to avoid unnecessary processing:
+
+```yaml
+✅ Efficient: Specific trigger
+trigger:
+  event: "order.created"
+  filters:
+    status: "pending"
+    total: "> 1000"
+
+❌ Inefficient: Broad trigger
+trigger:
+  event: "order.*"  # Triggers on all order events
+```
+</Accordion>
+
+<Accordion title="Order Conditions Logically">
+Place conditions that filter out the most records first:
+
+```yaml
+✅ Optimized: Most restrictive first
+conditions:
+  - field: "order.total"
+    operator: ">"
+    value: 10000  # Filters 90% of orders
+  - field: "customer.type"
+    operator: "="
+    value: "enterprise"  # Filters 50% of remaining
+  - field: "order.items"
+    operator: ">"
+    value: 5  # Final filter
+
+❌ Inefficient: Least restrictive first
+conditions:
+  - field: "order.items"
+    operator: ">"
+    value: 5  # Still processes 80% of orders
+  - field: "customer.type"
+    operator: "="
+    value: "enterprise"
+  - field: "order.total"
+    operator: ">"
+    value: 10000
+```
+</Accordion>
+
+<Accordion title="Avoid Complex Nested Logic">
+Break complex conditions into multiple rules:
+
+```yaml
+❌ Hard to maintain:
+conditions:
+  operator: "and"
+  conditions:
+    - field: "order.total"
+      operator: ">"
+      value: 1000
+    - operator: "or"
+      conditions:
+        - field: "customer.loyalty_tier"
+          operator: "="
+          value: "gold"
+        - operator: "and"
+          conditions:
+            - field: "customer.years_active"
+              operator: ">"
+              value: 2
+            - field: "customer.order_count"
+              operator: ">"
+              value: 10
+
+✅ Better: Split into multiple rules
+# Rule 1: High value orders
+condition: "order.total > 1000"
+
+# Rule 2: Gold customers
+condition: "customer.loyalty_tier == 'gold'"
+
+# Rule 3: Loyal customers
+condition: "customer.years_active > 2 AND customer.order_count > 10"
+```
+</Accordion>
+</AccordionGroup>
+
+### Action Design
+
+<Steps>
+<Step title="Make Actions Idempotent">
+Ensure actions can be safely repeated without side effects.
+
+```yaml
+✅ Idempotent: Safe to repeat
+actions:
+  - type: "update_field"
+    field: "status"
+    value: "approved"  # Same result every time
+    
+  - type: "send_notification"
+    recipient: "manager@company.com"
+    deduplication_key: "order_{{order.id}}_approval"  # Prevents duplicates
+
+❌ Not idempotent: Creates duplicates
+actions:
+  - type: "create_record"
+    table: "notifications"
+    # No deduplication - creates new record every time
+```
+</Step>
+
+<Step title="Limit Action Scope">
+Keep actions focused and avoid side effects:
+
+```yaml
+✅ Focused: Single responsibility
+name: "Update Order Status"
+actions:
+  - type: "update_field"
+    field: "order.status"
+    value: "shipped"
+
+❌ Unfocused: Multiple responsibilities
+name: "Process Order"
+actions:
+  - type: "update_field"
+    field: "order.status"
+    value: "shipped"
+  - type: "send_email"
+    to: "customer@email.com"
+  - type: "update_inventory"
+  - type: "create_invoice"
+  - type: "notify_warehouse"
+```
+</Step>
+
+<Step title="Handle Action Failures">
+Plan for action failures and provide fallback options:
+
+```yaml
+actions:
+  - type: "send_notification"
+    recipient: "primary@company.com"
+    fallback_recipients: ["backup@company.com", "manager@company.com"]
+    
+  - type: "update_system"
+    system: "primary"
+    fallback_system: "secondary"
+    
+  - type: "log_error"
+    message: "Primary notification failed, using fallback"
+    condition: "{{previous_action.status}} == 'failed'"
+```
+</Step>
+</Steps>
+
+## Workflow Best Practices
+
+### Workflow Design
+
+<CardGroup cols={2}>
+<Card title="Keep Workflows Focused" icon="target">
+Each workflow should have a clear beginning and end, with a specific business outcome.
+
+**Good:** "Customer Onboarding Workflow"
+**Poor:** "Handle Everything Workflow"
+</Card>
+
+<Card title="Use Sub-Workflows" icon="sitemap">
+Break complex workflows into reusable sub-workflows:
+
+```yaml
+steps:
+  - id: "validate_data"
+    name: "Validate Data"
+    type: "sub_workflow"
+    workflow_id: "data_validation_workflow"
+```
+</Card>
+</CardGroup>
+
+### Error Handling Patterns
+
+<AccordionGroup>
+<Accordion title="Retry with Backoff">
+Implement exponential backoff for transient failures:
+
+```yaml
+steps:
+  - id: "api_call"
+    name: "Call External API"
+    type: "task"
+    retry_policy:
+      max_attempts: 5
+      initial_delay: "1s"
+      max_delay: "30s"
+      backoff_multiplier: 2
+      retry_on: ["timeout", "rate_limit", "server_error"]
+```
+</Accordion>
+
+<Accordion title="Circuit Breaker Pattern">
+Prevent cascading failures with circuit breakers:
+
+```yaml
+steps:
+  - id: "check_circuit"
+    name: "Check Circuit Status"
+    type: "task"
+    action: "check_circuit_breaker"
+    
+  - id: "primary_operation"
+    name: "Primary Operation"
+    type: "task"
+    condition: "{{steps.check_circuit.status}} == 'closed'"
+    action: "primary_operation"
+    
+  - id: "fallback_operation"
+    name: "Fallback Operation"
+    type: "task"
+    condition: "{{steps.check_circuit.status}} == 'open'"
+    action: "fallback_operation"
+```
+</Accordion>
+
+<Accordion title="Compensation Pattern">
+Implement rollback capabilities for failed operations:
+
+```yaml
+steps:
+  - id: "reserve_inventory"
+    name: "Reserve Inventory"
+    type: "task"
+    action: "reserve_inventory"
+    compensation: "release_inventory"
+    
+  - id: "process_payment"
+    name: "Process Payment"
+    type: "task"
+    action: "process_payment"
+    compensation: "refund_payment"
+    
+  - id: "handle_failure"
+    name: "Handle Failure"
+    type: "task"
+    condition: "{{any_previous_step.status}} == 'failed'"
+    action: "execute_compensation"
+```
+</Accordion>
+</AccordionGroup>
+
+### Performance Optimization
+
+<Steps>
+<Step title="Minimize External Calls">
+Reduce dependencies on external systems:
+
+```yaml
+✅ Efficient: Batch operations
+steps:
+  - id: "collect_data"
+    name: "Collect All Data"
+    type: "task"
+    action: "collect_batch_data"  # Single API call
+    
+  - id: "process_batch"
+    name: "Process Batch"
+    type: "task"
+    action: "process_collected_data"
+
+❌ Inefficient: Individual calls
+steps:
+  - id: "get_customer"
+    name: "Get Customer"
+    type: "task"
+    action: "get_customer"  # API call 1
+    
+  - id: "get_orders"
+    name: "Get Orders"
+    type: "task"
+    action: "get_orders"  # API call 2
+    
+  - id: "get_preferences"
+    name: "Get Preferences"
+    type: "task"
+    action: "get_preferences"  # API call 3
+```
+</Step>
+
+<Step title="Use Parallel Execution">
+Execute independent tasks simultaneously:
+
+```yaml
+✅ Fast: Parallel execution
+steps:
+  - id: "parallel_tasks"
+    name: "Execute in Parallel"
+    type: "parallel"
+    branches:
+      - id: "task1"
+        name: "Task 1"
+        type: "task"
+        
+      - id: "task2"
+        name: "Task 2"
+        type: "task"
+        
+      - id: "task3"
+        name: "Task 3"
+        type: "task"
+
+❌ Slow: Sequential execution
+steps:
+  - id: "task1"
+    name: "Task 1"
+    type: "task"
+    
+  - id: "task2"
+    name: "Task 2"
+    type: "task"
+    depends_on: ["task1"]
+    
+  - id: "task3"
+    name: "Task 3"
+    type: "task"
+    depends_on: ["task2"]
+```
+</Step>
+
+<Step title="Cache Frequently Used Data">
+Avoid repeated data fetching:
+
+```yaml
+steps:
+  - id: "fetch_config"
+    name: "Fetch Configuration"
+    type: "task"
+    action: "fetch_config"
+    cache:
+      key: "workflow_config"
+      ttl: "1h"
+      
+  - id: "use_config"
+    name: "Use Configuration"
+    type: "task"
+    parameters:
+      config: "{{cache.workflow_config}}"  # Uses cached value
+```
+</Step>
+</Steps>
+
+## Testing and Monitoring
+
+### Testing Strategies
+
+<CardGroup cols={2}>
+<Card title="Unit Testing" icon="test-tube">
+Test individual rules and workflow steps:
+
+```bash
+# Test rule with various inputs
+test-rule --rule-id "inventory_alert" \
+  --input '{"inventory": 5}' \
+  --expected-triggered true
+```
+</Card>
+
+<Card title="Integration Testing" icon="link">
+Test complete workflows end-to-end:
+
+```bash
+# Test full workflow
+run-workflow-test --workflow-id "customer_onboarding" \
+  --scenario "enterprise_customer" \
+  --validate-all-steps
+```
+</Card>
+</CardGroup>
+
+### Monitoring and Alerting
+
+<AccordionGroup>
+<Accordion title="Key Metrics to Track">
+Monitor these essential metrics:
+
+- **Execution frequency**: How often rules/workflows run
+- **Success rate**: Percentage of successful executions
+- **Execution time**: Average duration of executions
+- **Error patterns**: Most common failure types
+- **Resource usage**: CPU, memory, and API call consumption
+</Accordion>
+
+<Accordion title="Set Up Alerts">
+Configure alerts for critical issues:
+
+```yaml
+alerts:
+  - name: "High Failure Rate"
+    condition: "failure_rate > 10%"
+    severity: "warning"
+    
+  - name: "Critical Workflow Failed"
+    condition: "workflow.onboarding.failure_count > 5"
+    severity: "critical"
+    
+  - name: "Performance Degradation"
+    condition: "avg_execution_time > 2x_baseline"
+    severity: "warning"
+```
+</Accordion>
+</AccordionGroup>
+
+## Common Pitfalls to Avoid
+
+<Warning>
+**Avoid These Mistakes:**
+
+1. **Creating circular dependencies** between rules
+2. **Over-engineering simple processes** with complex workflows
+3. **Ignoring error handling** and fallback scenarios
+4. **Hardcoding values** that should be configurable
+5. **Creating too many interdependent rules** that are hard to debug
+6. **Not testing edge cases** and failure scenarios
+7. **Forgetting about performance** impact on busy systems
+8. **Lack of documentation** for complex automation logic
+</Warning>
+
+<Check>
+Following these best practices will help you build reliable, maintainable automation that provides real business value while avoiding common pitfalls.
+</Check>

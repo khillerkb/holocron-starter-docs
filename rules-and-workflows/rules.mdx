@@ -1,0 +1,307 @@
+---
+title: 'Rules'
+description: 'Create conditional logic to automate business decisions and enforce policies'
+icon: 'gavel'
+---
+
+# Rules
+
+Rules provide a simple way to implement business logic using conditional statements. When specific conditions are met, rules automatically execute predefined actions without requiring custom code.
+
+## Rule Structure
+
+Every rule consists of three main components:
+
+<Steps>
+<Step title="Trigger">
+Define when the rule should be evaluated. Triggers can be:
+- **Event-based**: When specific events occur (e.g., new order created)
+- **Time-based**: At scheduled intervals (e.g., daily at 9 AM)
+- **Data-based**: When data meets certain conditions (e.g., inventory < 10)
+</Step>
+
+<Step title="Conditions">
+Set the criteria that must be met for the rule to execute. Conditions can include:
+- Field comparisons (equals, greater than, contains)
+- Multiple conditions with AND/OR logic
+- Complex expressions with functions
+</Step>
+
+<Step title="Actions">
+Specify what happens when conditions are met. Actions can:
+- Send notifications
+- Update data fields
+- Create new records
+- Call external APIs
+</Step>
+</Steps>
+
+## Creating Rules
+
+### Basic Rule Example
+
+<CodeGroup>
+```yaml Simple Validation Rule
+name: "High Value Order Approval"
+description: "Require manager approval for orders over $5,000"
+type: "data"
+enabled: true
+
+trigger:
+  event: "order.created"
+
+conditions:
+  - field: "order.total"
+    operator: "greater_than"
+    value: 5000
+
+actions:
+  - type: "update_field"
+    field: "order.status"
+    value: "pending_approval"
+  
+  - type: "send_notification"
+    recipient: "manager@company.com"
+    subject: "High Value Order Requires Approval"
+    message: "Order #{order.id} for ${order.total} needs approval"
+```
+
+```yaml Time-Based Rule
+name: "Daily Inventory Check"
+description: "Check inventory levels every morning"
+type: "scheduled"
+enabled: true
+
+trigger:
+  schedule: "0 9 * * *"  # Daily at 9 AM
+
+conditions:
+  - field: "product.inventory"
+    operator: "less_than"
+    value: 10
+
+actions:
+  - type: "send_notification"
+    recipient: "inventory@company.com"
+    subject: "Low Inventory Alert"
+    message: "Product {product.name} has {product.inventory} units remaining"
+  
+  - type: "create_record"
+    table: "reorder_requests"
+    data:
+      product_id: "{product.id}"
+      quantity: 50
+      priority: "medium"
+```
+</CodeGroup>
+
+### Advanced Rule Features
+
+<AccordionGroup>
+<Accordion title="Multiple Conditions">
+Combine multiple conditions with AND/OR logic:
+
+```yaml
+conditions:
+  operator: "and"
+  conditions:
+    - field: "order.total"
+      operator: "greater_than"
+      value: 1000
+    - field: "customer.type"
+      operator: "equals"
+      value: "premium"
+    - operator: "or"
+      conditions:
+        - field: "order.shipping_country"
+          operator: "equals"
+          value: "US"
+        - field: "order.shipping_country"
+          operator: "equals"
+          value: "CA"
+```
+</Accordion>
+
+<Accordion title="Conditional Actions">
+Execute different actions based on additional conditions:
+
+```yaml
+actions:
+  - type: "conditional"
+    conditions:
+      - field: "order.priority"
+        operator: "equals"
+        value: "urgent"
+    actions:
+      - type: "send_notification"
+        recipient: "urgent@company.com"
+        priority: "high"
+  - type: "conditional"
+    conditions:
+      - field: "order.priority"
+        operator: "equals"
+        value: "standard"
+    actions:
+      - type: "send_notification"
+        recipient: "standard@company.com"
+        priority: "normal"
+```
+</Accordion>
+
+<Accordion title="Data Transformations">
+Use functions to transform data before evaluation:
+
+```yaml
+conditions:
+  - field: "order.items"
+    operator: "function"
+    function: "count"
+    value: 5
+    
+  - field: "customer.email"
+    operator: "function"
+    function: "contains"
+    value: "@company.com"
+    
+  - field: "order.created_at"
+    operator: "function"
+    function: "days_ago"
+    value: 7
+```
+</Accordion>
+</AccordionGroup>
+
+## Rule Types
+
+<CardGroup cols={2}>
+<Card title="Data Rules" icon="database">
+Triggered when data changes or meets specific conditions
+
+**Use cases:** Validation, status updates, data enrichment
+</Card>
+
+<Card title="Event Rules" icon="zap">
+Triggered by system events or user actions
+
+**Use cases:** Notifications, logging, integrations
+</Card>
+
+<Card title="Scheduled Rules" icon="clock">
+Executed at specific times or intervals
+
+**Use cases:** Reports, cleanup tasks, recurring checks
+</Card>
+
+<Card title="Integration Rules" icon="link">
+Triggered by external system events
+
+**Use cases:** Webhook processing, API responses, third-party updates
+</Card>
+</CardGroup>
+
+## Best Practices
+
+<Steps>
+<Step title="Keep rules simple">
+Each rule should have a single, clear purpose. Complex logic should be broken into multiple rules.
+
+<Info>
+**Rule of thumb:** If you need more than 5 conditions or 5 actions, consider splitting into multiple rules.
+</Info>
+</Step>
+
+<Step title="Use descriptive names">
+Rule names should clearly indicate their purpose and trigger conditions.
+
+```yaml
+✅ Good: "Send VIP Welcome Email to New Premium Customers"
+❌ Poor: "Email Rule 1"
+```
+</Step>
+
+<Step title="Test thoroughly">
+Always test rules with various scenarios before enabling them in production.
+
+<Warning>
+Test edge cases like null values, empty fields, and boundary conditions.
+</Warning>
+</Step>
+
+<Step title="Monitor performance">
+Rules can impact system performance if not designed carefully.
+
+<Check>
+- Avoid complex nested conditions
+- Limit the number of rules triggered by the same event
+- Use specific field filters to reduce processing overhead
+</Check>
+</Step>
+</Steps>
+
+## Rule Management
+
+### Testing Rules
+
+Before enabling rules in production, use the testing environment:
+
+```bash
+# Test a rule with sample data
+POST /api/rules/{rule_id}/test
+{
+  "test_data": {
+    "order": {
+      "total": 7500,
+      "customer_id": "cust_123",
+      "items": 3
+    }
+  }
+}
+```
+
+### Monitoring and Debugging
+
+<AccordionGroup>
+<Accordion title="Execution Logs">
+View detailed logs of rule executions:
+
+```json
+{
+  "rule_id": "rule_123",
+  "execution_time": "2024-01-15T10:30:00Z",
+  "triggered_by": "order.created",
+  "conditions_met": true,
+  "actions_executed": 2,
+  "execution_duration_ms": 45,
+  "result": "success"
+}
+```
+</Accordion>
+
+<Accordion title="Performance Metrics">
+Monitor rule performance and resource usage:
+
+- Execution frequency
+- Average execution time
+- Success/failure rates
+- Resource consumption
+</Accordion>
+</AccordionGroup>
+
+### Version Control
+
+Rules support versioning to track changes and enable rollbacks:
+
+```yaml
+# Current version
+version: 2.1
+changes:
+  - "Updated threshold from $5,000 to $7,500"
+  - "Added CC to finance team"
+  
+# Rollback to previous version
+rollback_to: 2.0
+```
+
+<Check>
+Ready to create your first rule? Start with a simple validation rule and gradually build complexity as you become comfortable with the system.
+</Check>

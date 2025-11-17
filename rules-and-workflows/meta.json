@@ -1,0 +1,12 @@
+{
+  "icon": "workflow",
+  "pages": [
+    "index",
+    "rules",
+    "workflows",
+    "best-practices",
+    "..."
+  ],
+  "title": "Rules and Workflows",
+  "defaultOpen": true
+}

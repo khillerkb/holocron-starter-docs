@@ -1,0 +1,48 @@
+{
+  "logo": {
+    "dark": "https://holocron.so/logo/light.svg",
+    "light": "https://holocron.so/logo/dark.svg"
+  },
+  "name": "holocron-starter",
+  "footer": {
+    "links": [
+      {
+        "items": [
+          {
+            "href": "https://holocron.so",
+            "label": "Holocron"
+          }
+        ],
+        "header": "Documentation"
+      }
+    ],
+    "socials": {
+      "github": "https://github.com/remorses",
+      "twitter": "https://x.com/__morse"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "href": "https://holocron.so",
+        "icon": "document",
+        "label": "Home"
+      }
+    ],
+    "primary": {
+      "href": "https://holocron.so/login",
+      "type": "button",
+      "label": "Get Started"
+    }
+  },
+  "siteId": "01KA7WEMQGE84DPNR6YD85SPX8",
+  "$schema": "https://holocron.so/holocron.json",
+  "domains": [
+    "holocron-starter-5ad2wyc6.holocronsites.com"
+  ],
+  "favicon": {
+    "dark": "/favicon.svg",
+    "light": "/favicon.svg"
+  },
+  "disableEditButton": false
+}
