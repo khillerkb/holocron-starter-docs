@@ -1,0 +1,21 @@
+{
+  "name": "holocron-starter-docs",
+  "version": "1.0.0",
+  "description": "Repository created using Holocron",
+  "scripts": {
+    "dev": "holocron dev",
+    "build": "holocron build",
+    "preview": "holocron preview"
+  },
+  "dependencies": {
+    "@holocron.so/cli": "^0.5.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "holocron",
+    "documentation",
+    "mdx"
+  ],
+  "author": "",
+  "license": "ISC"
+}
