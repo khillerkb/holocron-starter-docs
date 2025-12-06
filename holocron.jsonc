@@ -1,48 +1,48 @@
 {
-  "logo": {
-    "dark": "https://holocron.so/logo/light.svg",
-    "light": "https://holocron.so/logo/dark.svg"
+  "$schema": "https://holocron.so/holocron.json",
+  "siteId": "01KBTAY8DA7RMQ2E2S3E24P3EZ",
+  "name": "holocron-starter-docs",
+  "disableEditButton": false,
+  "favicon": {
+    "light": "/favicon.svg",
+    "dark": "/favicon.svg"
   },
-  "name": "holocron-starter",
-  "footer": {
-    "links": [
-      {
-        "items": [
-          {
-            "href": "https://holocron.so",
-            "label": "Holocron"
-          }
-        ],
-        "header": "Documentation"
-      }
-    ],
-    "socials": {
-      "github": "https://github.com/remorses",
-      "twitter": "https://x.com/__morse"
-    }
+  "logo": {
+    "light": "https://holocron.so/logo/dark.svg",
+    "dark": "https://holocron.so/logo/light.svg"
   },
   "navbar": {
     "links": [
       {
+        "label": "Home",
         "href": "https://holocron.so",
-        "icon": "document",
-        "label": "Home"
+        "icon": "document"
       }
     ],
     "primary": {
-      "href": "https://holocron.so/login",
       "type": "button",
-      "label": "Get Started"
+      "label": "Get Started",
+      "href": "https://holocron.so/login"
     }
   },
-  "siteId": "01KA7WEMQGE84DPNR6YD85SPX8",
-  "$schema": "https://holocron.so/holocron.json",
-  "domains": [
-    "holocron-starter-5ad2wyc6.holocronsites.com"
-  ],
-  "favicon": {
-    "dark": "/favicon.svg",
-    "light": "/favicon.svg"
+  "footer": {
+    "socials": {
+      "twitter": "https://x.com/__morse",
+      "github": "https://github.com/remorses"
+    },
+    "links": [
+      {
+        "header": "Documentation",
+        "items": [
+          {
+            "label": "Holocron",
+            "href": "https://holocron.so"
+          }
+        ]
+      }
+    ]
   },
-  "disableEditButton": false
+  "domains": [
+    "holocron-starter-docs-c0by737i.holocronsites.com"
+  ]
 }
