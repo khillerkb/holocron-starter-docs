@@ -38,6 +38,18 @@ Control flow between steps:
 
 ## Creating Workflows
 
+### Workflow Step Types
+
+| Step Type | Purpose | Execution | Parameters | Error Handling | Use Case Examples |
+|-----------|---------|-----------|------------|----------------|-------------------|
+| **Task** | Execute action | Sequential | `action`, `parameters` | Retry, fallback | Data processing, API calls, calculations |
+| **Condition** | Branch logic | Decision point | `condition`, `true_branch`, `false_branch` | N/A | Routing, validation, approval checks |
+| **Approval** | Human decision | Wait for input | `assignee`, `timeout`, `reminder` | Timeout, escalation | Manager approval, review processes |
+| **Parallel** | Concurrent execution | Simultaneous | `branches[]` | Individual branch handling | Independent validations, data collection |
+| **Loop** | Repeat operations | Iterative | `condition`, `max_iterations`, `steps[]` | Max iterations, exit conditions | Retry logic, batch processing |
+| **Switch** | Multi-way branching | Single path | `variable`, `cases[]`, `default` | Default case | Type-based routing, status handling |
+| **Sub-workflow** | Reuse logic | Delegated | `workflow_id`, `parameters` | Inherited from sub-workflow | Common processes, modular design |
+
 ### Basic Workflow Example
 
 <CodeGroup>
@@ -331,6 +343,15 @@ steps:
 
 ## Workflow Types
 
+| Workflow Type | Complexity | Human Interaction | System Integration | Typical Duration | Error Handling |
+|---------------|------------|-------------------|-------------------|------------------|----------------|
+| **Approval Workflows** | Medium | Required | Minimal | Hours to Days | Rollback capable |
+| **Integration Workflows** | High | None | Extensive | Seconds to Minutes | Retry logic |
+| **Processing Workflows** | Medium | Optional | Moderate | Minutes to Hours | Compensation |
+| **Monitoring Workflows** | Low | None | Moderate | Continuous | Alerting |
+
+### Workflow Type Details
+
 <CardGroup cols={2}>
 <Card title="Approval Workflows" icon="user-check">
 Require human approval for critical decisions
@@ -499,6 +520,15 @@ Track workflow execution in real-time:
 </AccordionGroup>
 
 ### Performance Optimization
+
+| Optimization Technique | Performance Impact | Implementation Complexity | Resource Usage | Best Use Cases | Trade-offs |
+|------------------------|-------------------|---------------------------|----------------|----------------|------------|
+| **Parallel Execution** | 3-5x faster | Medium | Higher concurrent load | Independent tasks | Increased complexity |
+| **Batch Processing** | 2-3x faster | Low | Lower API calls | Bulk operations | Higher memory usage |
+| **Caching** | 5-10x faster | Low | Lower data fetching | Frequent access patterns | Stale data risk |
+| **Conditional Logic** | 1.5-2x faster | Low | Reduced processing | Variable workflows | Code complexity |
+| **Async Processing** | 2-4x faster | High | Better resource utilization | Long-running tasks | Debugging complexity |
+| **Connection Pooling** | 2-3x faster | Medium | Lower connection overhead | Database/API heavy workflows | Configuration complexity |
 
 <Info>
 **Optimization Tips:**

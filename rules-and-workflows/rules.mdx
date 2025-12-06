@@ -173,6 +173,15 @@ conditions:
 
 ## Rule Types
 
+| Rule Type | Trigger | Processing | Best Use Cases | Performance | Complexity |
+|------------|----------|------------|----------------|-------------|------------|
+| **Data Rules** | Data changes or conditions | Real-time | Validation, status updates, data enrichment | High | Low |
+| **Event Rules** | System events or user actions | Real-time | Notifications, logging, integrations | High | Low |
+| **Scheduled Rules** | Time-based intervals | Batch | Reports, cleanup tasks, recurring checks | Medium | Medium |
+| **Integration Rules** | External system events | Real-time | Webhook processing, API responses, third-party updates | Medium | High |
+
+### Rule Type Details
+
 <CardGroup cols={2}>
 <Card title="Data Rules" icon="database">
 Triggered when data changes or meets specific conditions
@@ -239,6 +248,21 @@ Rules can impact system performance if not designed carefully.
 </Steps>
 
 ## Rule Management
+
+### Configuration Parameters
+
+| Parameter | Type | Required | Default | Description | Example |
+|-----------|------|----------|---------|-------------|---------|
+| `name` | string | ✅ | - | Unique rule identifier | `"High Value Order Approval"` |
+| `description` | string | ✅ | - | Human-readable purpose | `"Require manager approval for orders over $5,000"` |
+| `type` | enum | ✅ | - | Rule type classification | `"data"`, `"event"`, `"scheduled"`, `"integration"` |
+| `enabled` | boolean | ✅ | `true` | Whether rule is active | `true`, `false` |
+| `priority` | integer | ❌ | `0` | Execution priority (higher = first) | `0-100` |
+| `version` | string | ❌ | `"1.0"` | Rule version for tracking | `"2.1"` |
+| `tags` | array | ❌ | `[]` | Categorization tags | `["finance", "approval"]` |
+| `timeout` | string | ❌ | `"30s"` | Maximum execution time | `"30s"`, `"5m"`, `"1h"` |
+| `retry_count` | integer | ❌ | `0` | Number of retry attempts | `0-5` |
+| `retry_delay` | string | ❌ | `"1s"` | Delay between retries | `"1s"`, `"30s"`, `"1m"` |
 
 ### Testing Rules
 

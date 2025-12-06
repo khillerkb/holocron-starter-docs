@@ -10,6 +10,21 @@ Learn from proven patterns and avoid common pitfalls when building rules and wor
 
 ## Design Principles
 
+### Rule vs Workflow Decision Matrix
+
+| Use Case | Complexity | Human Interaction | Real-time Requirements | Recommended Approach | Example |
+|----------|------------|-------------------|----------------------|---------------------|---------|
+| **Simple validation** | Low | None | Immediate | **Rule** | Email format validation |
+| **Multi-step approval** | Medium | Required | Within hours | **Workflow** | Expense approval process |
+| **Data transformation** | Low | None | Immediate | **Rule** | Currency conversion |
+| **System integration** | High | None | Within minutes | **Workflow** | Order fulfillment across systems |
+| **Scheduled tasks** | Low | None | Time-based | **Rule** | Daily report generation |
+| **Conditional routing** | Medium | Optional | Immediate | **Either** | Customer tier-based processing |
+| **Error handling** | Medium | None | Immediate | **Rule** | Retry failed operations |
+| **Complex orchestration** | High | Optional | Variable | **Workflow** | Customer onboarding process |
+
+### Design Guidelines
+
 <Steps>
 <Step title="Start Simple">
 Begin with basic rules and simple workflows. Complex automation often starts simple and grows organically.
@@ -332,7 +347,16 @@ steps:
 </Accordion>
 </AccordionGroup>
 
-### Performance Optimization
+| Optimization Strategy | When to Use | Performance Gain | Implementation Effort | Risk Level | Monitoring Required |
+|----------------------|-------------|------------------|----------------------|------------|-------------------|
+| **Condition Ordering** | High-volume rules | 2-3x improvement | Low | None | Execution time |
+| **Parallel Execution** | Independent tasks | 3-5x improvement | Medium | Medium | Resource usage |
+| **Caching** | Frequent data access | 5-10x improvement | Low | Low | Cache hit rate |
+| **Batch Processing** | Bulk operations | 2-4x improvement | Medium | Low | Memory usage |
+| **Index Optimization** | Database queries | 10-50x improvement | High | Low | Query performance |
+| **Async Processing** | Long-running tasks | 2-3x improvement | High | High | Queue depth |
+| **Connection Pooling** | External APIs | 2-3x improvement | Medium | Low | Connection usage |
+| **Data Archiving** | Historical data | 5-20x improvement | Medium | Medium | Storage usage |
 
 <Steps>
 <Step title="Minimize External Calls">
@@ -494,6 +518,21 @@ alerts:
 </AccordionGroup>
 
 ## Common Pitfalls to Avoid
+
+### Troubleshooting Matrix
+
+| Problem Symptom | Likely Cause | Quick Fix | Prevention | Long-term Solution |
+|-----------------|--------------|-----------|------------|-------------------|
+| **Rule not triggering** | Incorrect trigger conditions | Check trigger syntax and field names | Use specific, tested triggers | Implement trigger validation |
+| **Workflow timing out** | Long-running tasks | Increase timeout values | Set realistic timeouts | Optimize task performance |
+| **High error rate** | Poor error handling | Add try-catch logic | Design for failure | Implement circuit breakers |
+| **Performance degradation** | Inefficient conditions | Reorder conditions (most restrictive first) | Use performance testing | Implement caching |
+| **Duplicate actions** | Non-idempotent actions | Add deduplication keys | Make actions idempotent | Use transaction logs |
+| **Circular dependencies** | Cross-referencing rules | Disable conflicting rules | Document rule dependencies | Implement dependency graphs |
+| **Memory issues** | Large data processing | Process data in chunks | Monitor memory usage | Implement streaming |
+| **API rate limits** | Too many external calls | Batch API requests | Implement rate limiting | Use caching strategies |
+
+### Common Mistakes to Avoid
 
 <Warning>
 **Avoid These Mistakes:**
