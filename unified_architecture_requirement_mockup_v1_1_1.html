@@ -56,6 +56,440 @@
             --rfc-may: #3b82f6;
         }
 
+        /* Loading Spinner for Cytoscape */
+        .lineage-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 5;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--core-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .lineage-loading-text {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--core-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--core-darkblue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Search Box */
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            margin: 0 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border: 1px solid var(--core-gray);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: 'Work Sans', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--core-blue);
+            box-shadow: 0 0 0 3px rgba(71, 192, 225, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.25rem;
+            display: none;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid var(--core-gray);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .search-results.visible {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--gray-50);
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            color: var(--core-navy);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .search-result-context {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .search-highlight {
+            background: rgba(255, 235, 59, 0.3);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--core-blue);
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-900);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: var(--gray-900);
+            z-index: 1000;
+        }
+
+        /* Phase Content Animations */
+        .phase-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .phase-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Metadata Panel Animations */
+        .node-detail-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gray-50);
+            border-top: 2px solid var(--core-blue);
+            padding: 0.75rem 1rem;
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            z-index: 15;
+            opacity: 0;
+        }
+
+        .node-detail-panel.visible {
+            display: block;
+            max-height: 200px;
+            overflow-y: auto;
+            opacity: 1;
+        }
+
+        /* Anchor Link Buttons */
+        .anchor-link {
+            display: inline-block;
+            margin-left: 0.5rem;
+            color: var(--core-blue);
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .phase-section-header:hover .anchor-link,
+        .data-section-header:hover .anchor-link {
+            opacity: 1;
+        }
+
+        .anchor-link:hover {
+            color: var(--core-darkblue);
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-900);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header {
+                position: static;
+                box-shadow: none;
+            }
+
+            .back-to-top,
+            .search-container,
+            .code-expand,
+            .code-copy,
+            .lineage-legend,
+            .node-detail-close,
+            .anchor-link {
+                display: none !important;
+            }
+
+            .code-body {
+                max-height: none !important;
+            }
+
+            .code-block {
+                page-break-inside: avoid;
+            }
+
+            .tab-panel {
+                display: block !important;
+            }
+
+            .tabs {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .search-container {
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1 1 auto;
+                min-width: 120px;
+            }
+
+            .phase-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .phase-tab {
+                border-radius: 6px;
+                border-bottom: 1px solid var(--core-gray);
+            }
+
+            .phase-tab.active {
+                margin-bottom: 0;
+                border-bottom: 1px solid var(--core-gray);
+            }
+
+            .content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .data-lineage-graph {
+                height: 400px;
+                overflow-x: auto;
+            }
+
+            .cytoscape-container {
+                min-width: 600px;
+            }
+
+            .stakeholder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Improved Focus Visibility (Accessibility) */
+        *:focus-visible {
+            outline: 2px solid var(--core-blue);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--core-blue);
+            outline-offset: 2px;
+        }
+
+        /* Skip to Content Link (Accessibility) */
+        .skip-to-content {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--core-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            z-index: 10000;
+            transition: top 0.2s;
+        }
+
+        .skip-to-content:focus {
+            top: 0;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -67,6 +501,341 @@
             background: var(--core-lightgray);
             color: var(--gray-900);
             line-height: 1.6;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--core-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--core-darkblue);
+            transform: translateY(-3px);
+        }
+
+        /* Tooltip System */
+        .tooltip {
+            position: relative;
+            border-bottom: 1px dotted var(--gray-400);
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-900);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            pointer-events: none;
+            z-index: 1000;
+            margin-bottom: 0.5rem;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Version Dropdown */
+        .version-dropdown {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--core-gray);
+            border-radius: 4px;
+            background: white;
+            color: var(--gray-900);
+            font-size: 0.875rem;
+            font-family: 'Work Sans', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .version-dropdown:hover {
+            border-color: var(--core-blue);
+        }
+
+        .version-dropdown:focus {
+            outline: 2px solid var(--core-blue);
+            outline-offset: 2px;
+            border-color: var(--core-blue);
+        }
+
+        .version-dropdown option {
+            padding: 0.5rem;
+        }
+
+        /* Version Status Colors in UI */
+        .version-released {
+            color: var(--status-approved);
+        }
+
+        .version-testing {
+            color: var(--status-draft);
+        }
+
+        .version-deprecated {
+            color: var(--status-deprecated);
+        }
+
+        /* Professional Version Display Stack */
+        .version-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .version-primary {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .version-secondary {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.5rem;
+            background: var(--gray-50);
+            border-radius: 4px;
+            border-left: 3px solid var(--status-draft);
+        }
+
+        .version-number {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--core-navy);
+            font-family: 'Courier New', monospace;
+        }
+
+        .version-number-small {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-family: 'Courier New', monospace;
+        }
+
+        .version-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            border-radius: 12px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .version-badge-small {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .version-badge.version-released {
+            background: var(--status-approved);
+            color: white;
+        }
+
+        .version-badge-small.version-testing {
+            background: var(--status-draft);
+            color: white;
+        }
+
+        .version-badge.version-testing {
+            background: var(--status-draft);
+            color: white;
+        }
+
+        .version-badge.version-deprecated {
+            background: var(--status-deprecated);
+            color: white;
+        }
+
+        .version-current {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--core-navy);
+        }
+
+        .version-badge.version-released {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--status-approved);
+        }
+
+        .version-badge.version-testing {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--status-draft);
+        }
+
+        .version-badge.version-deprecated {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--status-deprecated);
+        }
+
+        /* Loading Spinner for Lineage */
+        .lineage-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--core-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .lineage-loading-text {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.75rem 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .phase-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .phase-tab {
+                width: 100%;
+            }
+
+            .code-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .data-lineage-graph {
+                height: 400px;
+                overflow-x: auto;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .metamodel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stakeholder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header {
+                position: static;
+                box-shadow: none;
+            }
+
+            .back-to-top,
+            .code-expand,
+            .code-copy,
+            .code-github {
+                display: none !important;
+            }
+
+            .code-body {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            .lineage-legend,
+            .lineage-hint {
+                display: none !important;
+            }
+
+            .tab-panel {
+                display: block !important;
+                page-break-before: always;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+
+        /* Keyboard Focus Visibility */
+        *:focus {
+            outline: 2px solid var(--core-blue);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        .tab:focus,
+        .phase-tab:focus {
+            outline: 2px solid var(--core-blue);
+            outline-offset: 2px;
         }
 
         /* Header */
@@ -197,7 +966,7 @@
         .req-header-meta {
             padding: 1rem 2rem;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 1rem;
             border-bottom: 2px solid var(--core-lightgray);
         }
@@ -1613,6 +2382,17 @@
     <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 </head>
 <body>
+    <!-- Skip to Content Link (Accessibility) -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" onclick="scrollToTop()" aria-label="Back to top">
+        ↑
+    </button>
+
     <header class="header">
         <div class="header-content">
             <div class="breadcrumb">
@@ -1624,15 +2404,31 @@
                 <span>/</span>
                 <span>REQ-SEC-001</span>
             </div>
-            <div class="header-actions">
-                <button class="btn btn-secondary">Export</button>
+
+            <!-- Search Box -->
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    class="search-box" 
+                    id="searchBox"
+                    placeholder="Search requirements, rules, code..." 
+                    aria-label="Search"
+                    autocomplete="off"
+                />
+                <span class="search-icon">🔍</span>
+                <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">×</button>
+                <div class="search-results" id="searchResults" role="listbox"></div>
+            </div>
+
+            <div class="header-actions" style="display: flex; gap: 0.75rem; align-items: center;">
+                <button class="btn btn-secondary" onclick="exportToPDF()">Export PDF</button>
                 <button class="btn btn-secondary">Version History</button>
                 <button class="btn btn-primary">Edit Requirement</button>
             </div>
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" id="main-content">
         <main class="main-content">
             <!-- Requirement Header -->
             <div class="req-header">
@@ -1646,13 +2442,18 @@
                         <div class="meta-label">Status</div>
                         <div class="meta-value">
                             <span class="status-badge status-approved">
-                                <span>●</span>
                                 Approved
                             </span>
                         </div>
                     </div>
                     <div class="meta-item">
-                        <div class="meta-label">Requirement Level</div>
+                        <div class="meta-label">Application Level</div>
+                        <div class="meta-value">
+                            <span class="rfc-badge rfc-must">MUST</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Platform Level</div>
                         <div class="meta-value">
                             <span class="rfc-badge rfc-must">MUST</span>
                         </div>
@@ -1706,19 +2507,19 @@
             </div>
 
             <!-- Tabs -->
-            <div class="tabs">
-                <div class="tab-list">
-                    <button class="tab active" data-tab="metamodel">Metamodel</button>
-                    <button class="tab" data-tab="rules">Requirement Rules</button>
-                    <button class="tab" data-tab="agents">Agent Instructions</button>
-                    <button class="tab" data-tab="policy">Policy-as-Code</button>
-                    <button class="tab" data-tab="validation">Validation</button>
-                    <button class="tab" data-tab="accountability">Accountable</button>
+            <div class="tabs" role="navigation" aria-label="Requirement sections">
+                <div class="tab-list" role="tablist">
+                    <button class="tab active" data-tab="metamodel" role="tab" aria-selected="true" aria-controls="metamodel">Metamodel</button>
+                    <button class="tab" data-tab="rules" role="tab" aria-selected="false" aria-controls="rules">Requirement Rules</button>
+                    <button class="tab" data-tab="agents" role="tab" aria-selected="false" aria-controls="agents">Agent Instructions</button>
+                    <button class="tab" data-tab="policy" role="tab" aria-selected="false" aria-controls="policy">Policy-as-Code</button>
+                    <button class="tab" data-tab="validation" role="tab" aria-selected="false" aria-controls="validation">Validation</button>
+                    <button class="tab" data-tab="accountability" role="tab" aria-selected="false" aria-controls="accountability">Accountable</button>
                 </div>
 
                 <!-- Metamodel Tab -->
                 <div class="tab-content">
-                    <div class="tab-panel active" id="metamodel">
+                    <div class="tab-panel active" id="metamodel" role="tabpanel" aria-labelledby="metamodel-tab">
                         <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700;">Requirement Attributes</h2>
                         
                                                                                                                                                 <div class="metamodel-grid">
@@ -2029,8 +2830,11 @@
                         <!-- Deploy Phase Content -->
                         <div class="phase-content active" id="deploy-phase">
                             <!-- Section Header -->
-                            <div class="phase-section-header">
-                                <h3 class="phase-section-title">Deploy Phase: Blocking Policy</h3>
+                            <div class="phase-section-header" id="deploy-phase-section">
+                                <h3 class="phase-section-title">
+                                    Deploy Phase: Blocking Policy
+                                    <span class="anchor-link" onclick="copyAnchorLink('deploy-phase-section')" title="Copy link to section">🔗</span>
+                                </h3>
                                 <p class="phase-section-description">
                                     This policy runs in the CI/CD pipeline during deployment to block releases that don't meet MFA requirements.
                                 </p>
@@ -2039,7 +2843,7 @@
                             <!-- CODE BLOCK FIRST -->
                             <div class="code-block">
                                 <div class="code-header">
-                                    <span class="code-language">OPA Rego - Deploy Phase</span>
+                                    <span class="code-language"><span class="tooltip" data-tip="Open Policy Agent Rego - Declarative policy language">OPA Rego</span> - Deploy Phase</span>
                                     <div class="code-actions">
                                         <span class="code-version">v2.1.0 | Deploy | Rules: 1.1-1.7</span>
                                         <a href="https://github.com/your-org/tech-requirements/blob/main/policies/deploy/REQ-SEC-001-v2.1.0.rego" target="_blank" class="code-github">
@@ -2119,7 +2923,12 @@ bypass_routes_exist if {
 
                                 <!-- Data Lineage Graph -->
                                 <div class="data-lineage-graph">
-                                    <div id="cy-deploy" class="cytoscape-container"></div>
+                                    <div id="cy-deploy" class="cytoscape-container" role="img" aria-label="Deploy phase data lineage diagram">
+                                        <div class="lineage-loading">
+                                            <div class="spinner"></div>
+                                            <p class="lineage-loading-text">Loading data lineage...</p>
+                                        </div>
+                                    </div>
                                     <div class="lineage-hint">Drag to pan • Scroll to zoom</div>
                                     <div class="lineage-legend collapsed" onclick="toggleLegend(this)">
                                         <div class="legend-toggle">ℹ Info</div>
@@ -2221,7 +3030,12 @@ compliance := {
 
                                 <!-- Data Lineage Graph -->
                                 <div class="data-lineage-graph">
-                                    <div id="cy-runtime" class="cytoscape-container"></div>
+                                    <div id="cy-runtime" class="cytoscape-container" role="img" aria-label="Runtime phase data lineage diagram">
+                                        <div class="lineage-loading">
+                                            <div class="spinner"></div>
+                                            <p class="lineage-loading-text">Loading data lineage...</p>
+                                        </div>
+                                    </div>
                                     <div class="lineage-hint">Drag to pan • Scroll to zoom</div>
                                     <div class="lineage-legend collapsed" onclick="toggleLegend(this)">
                                         <div class="legend-toggle">ℹ Info</div>
@@ -2793,7 +3607,14 @@ Agent successfully assists when:
                     </div>
                     <div class="info-item">
                         <div class="info-label">Target Release</div>
-                        <div class="info-value">v2.1.0 (Released)</div>
+                        <div class="info-value">
+                            <select class="version-dropdown" onchange="switchVersion(this.value)" aria-label="Select version">
+                                <option value="2.1.0" selected>v2.1.0 (Released)</option>
+                                <option value="2.2.0">v2.2.0 (Testing)</option>
+                                <option value="2.0.0">v2.0.0 (Released)</option>
+                                <option value="1.5.0">v1.5.0 (Deprecated)</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Certified</div>
@@ -2832,11 +3653,20 @@ Agent successfully assists when:
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/deploy/REQ-SEC-001-v2.1.0.rego" target="_blank">deploy-policy.rego (v2.1.0)</a>
                     </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/deploy/REQ-SEC-001-v2.2.0.rego" target="_blank">deploy-policy.rego (v2.2.0 - Testing)</a>
+                    </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.1.0.rego" target="_blank">runtime-policy.rego (v2.1.0)</a>
                     </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.2.0.rego" target="_blank">runtime-policy.rego (v2.2.0 - Testing)</a>
+                    </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">🤖</span><a href="https://github.com/your-org/tech-requirements/blob/main/agents/REQ-SEC-001-agents-v2.1.0.md" target="_blank">agent-instructions.md (v2.1.0)</a>
+                    </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">🤖</span><a href="https://github.com/your-org/tech-requirements/blob/main/agents/REQ-SEC-001-agents-v2.2.0.md" target="_blank">agent-instructions.md (v2.2.0 - Testing)</a>
                     </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">🔍</span>CTRL-1106338: Password Configuration - Non-SSO Application Layer [Cyber]
@@ -2844,14 +3674,23 @@ Agent successfully assists when:
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/deploy/REQ-SEC-001-v2.1.0.rego" target="_blank">deploy-policy.rego (v2.1.0)</a>
                     </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/deploy/REQ-SEC-001-v2.2.0.rego" target="_blank">deploy-policy.rego (v2.2.0 - Testing)</a>
+                    </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.1.0.rego" target="_blank">runtime-policy.rego (v2.1.0)</a>
+                    </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.2.0.rego" target="_blank">runtime-policy.rego (v2.2.0 - Testing)</a>
                     </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">📊</span>CTRL-1106173: SSO Application Authentication Session Management
                     </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.1.0.rego" target="_blank">runtime-policy.rego (v2.1.0)</a>
+                    </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.2.0.rego" target="_blank">runtime-policy.rego (v2.2.0 - Testing)</a>
                     </div>
                     
                     <div style="margin-top: 1rem;" class="trace-level-1">
@@ -2866,8 +3705,14 @@ Agent successfully assists when:
                     <div class="trace-level-3">
                         <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.1.0.rego" target="_blank">runtime-policy.rego (v2.1.0)</a>
                     </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">⚡</span><a href="https://github.com/your-org/tech-requirements/blob/main/policies/runtime/REQ-SEC-001-v2.2.0.rego" target="_blank">runtime-policy.rego (v2.2.0 - Testing)</a>
+                    </div>
                     <div class="trace-level-3">
                         <span class="trace-icon">🤖</span><a href="https://github.com/your-org/tech-requirements/blob/main/agents/REQ-SEC-001-agents-v2.1.0.md" target="_blank">agent-instructions.md (v2.1.0)</a>
+                    </div>
+                    <div class="trace-level-3" style="opacity: 0.7;">
+                        <span class="trace-icon">🤖</span><a href="https://github.com/your-org/tech-requirements/blob/main/agents/REQ-SEC-001-agents-v2.2.0.md" target="_blank">agent-instructions.md (v2.2.0 - Testing)</a>
                     </div>
                 </div>
             </div>
@@ -2932,20 +3777,38 @@ Agent successfully assists when:
                 const targetTab = tab.getAttribute('data-tab');
                 
                 // Remove active class from all tabs and panels
-                tabs.forEach(t => t.classList.remove('active'));
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
                 tabPanels.forEach(p => p.classList.remove('active'));
                 
                 // Add active class to clicked tab and corresponding panel
                 tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
                 document.getElementById(targetTab).classList.add('active');
+                
+                // Announce to screen readers
+                if (typeof announceToScreenReader === 'function') {
+                    announceToScreenReader(`Switched to ${tab.textContent} section`);
+                }
             });
         });
 
         // Code expansion functionality
         function toggleCode(button) {
-            const codeBody = button.closest('.code-block').querySelector('.code-body');
+            const codeBlock = button.closest('.code-block');
+            const codeBody = codeBlock.querySelector('.code-body');
+            const isExpanded = codeBody.classList.contains('expanded');
+            
             codeBody.classList.toggle('expanded');
-            button.textContent = codeBody.classList.contains('expanded') ? 'Collapse' : 'Expand';
+            button.textContent = isExpanded ? 'Expand' : 'Collapse';
+            button.setAttribute('aria-expanded', !isExpanded);
+            
+            // Announce to screen readers
+            if (typeof announceToScreenReader === 'function') {
+                announceToScreenReader(`Code block ${isExpanded ? 'collapsed' : 'expanded'}`);
+            }
         }
 
         // Lineage diagram expand functionality
@@ -3146,6 +4009,10 @@ Agent successfully assists when:
                 // Fine-tune vertical centering
                 const pan = cy.pan();
                 cy.pan({ x: pan.x, y: 0 });
+                
+                // Hide loading spinner
+                const loading = container.querySelector('.lineage-loading');
+                if (loading) loading.style.display = 'none';
             });
 
             cy.on('tap', 'node', function(evt) {
@@ -3353,6 +4220,10 @@ Agent successfully assists when:
                 // Fine-tune vertical centering
                 const pan = cy.pan();
                 cy.pan({ x: pan.x, y: 0 });
+                
+                // Hide loading spinner
+                const loading = container.querySelector('.lineage-loading');
+                if (loading) loading.style.display = 'none';
             });
 
             cy.on('tap', 'node', function(evt) {
@@ -3455,6 +4326,410 @@ Agent successfully assists when:
                 }, index * 100);
             });
         });
+
+        // ===== NEW FEATURES JAVASCRIPT =====
+
+        // Back to Top Button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Toast Notifications
+        function showToast(message, duration = 2000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, duration);
+        }
+
+        // Copy Anchor Link
+        function copyAnchorLink(elementId) {
+            const url = window.location.href.split('#')[0] + '#' + elementId;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('🔗 Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showToast('❌ Failed to copy link');
+            });
+        }
+
+        // Search Functionality
+        const searchBox = document.getElementById('searchBox');
+        const searchClear = document.getElementById('searchClear');
+        const searchResults = document.getElementById('searchResults');
+        
+        let searchIndex = null;
+
+        // Build search index
+        function buildSearchIndex() {
+            const index = [];
+            
+            // Index all text content
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                const tabName = panel.id;
+                
+                // Index headers
+                panel.querySelectorAll('h2, h3, h4').forEach(header => {
+                    index.push({
+                        title: header.textContent.trim(),
+                        context: '',
+                        element: header,
+                        type: 'header',
+                        tab: tabName
+                    });
+                });
+                
+                // Index validation rules
+                panel.querySelectorAll('.validation-rule').forEach(rule => {
+                    index.push({
+                        title: 'Validation Rule',
+                        context: rule.textContent.trim(),
+                        element: rule,
+                        type: 'rule',
+                        tab: tabName
+                    });
+                });
+                
+                // Index code blocks
+                panel.querySelectorAll('.code-body pre').forEach(code => {
+                    const lines = code.textContent.split('\n').slice(0, 5).join(' ');
+                    index.push({
+                        title: 'Code Block',
+                        context: lines.substring(0, 150) + '...',
+                        element: code.closest('.code-block'),
+                        type: 'code',
+                        tab: tabName
+                    });
+                });
+            });
+            
+            return index;
+        }
+
+        // Perform search
+        function performSearch(query) {
+            if (!searchIndex) {
+                searchIndex = buildSearchIndex();
+            }
+            
+            if (query.length < 2) {
+                searchResults.classList.remove('visible');
+                return;
+            }
+            
+            const queryLower = query.toLowerCase();
+            const results = searchIndex.filter(item => {
+                return item.title.toLowerCase().includes(queryLower) ||
+                       item.context.toLowerCase().includes(queryLower);
+            }).slice(0, 10);
+            
+            displaySearchResults(results, query);
+        }
+
+        // Display search results
+        function displaySearchResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item" style="color: var(--gray-600);">No results found</div>';
+                searchResults.classList.add('visible');
+                return;
+            }
+            
+            searchResults.innerHTML = results.map(result => {
+                const highlightedTitle = highlightText(result.title, query);
+                const highlightedContext = highlightText(result.context.substring(0, 100), query);
+                
+                return `
+                    <div class="search-result-item" onclick="navigateToResult('${result.tab}', ${results.indexOf(result)})">
+                        <div class="search-result-title">${highlightedTitle}</div>
+                        ${result.context ? `<div class="search-result-context">${highlightedContext}...</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            searchResults.classList.add('visible');
+            
+            // Store results for navigation
+            window.currentSearchResults = results;
+        }
+
+        // Highlight search text
+        function highlightText(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Navigate to search result
+        function navigateToResult(tabId, resultIndex) {
+            const result = window.currentSearchResults[resultIndex];
+            
+            // Switch to correct tab
+            const tab = document.querySelector(`[onclick*="${tabId}"]`);
+            if (tab && !tab.classList.contains('active')) {
+                tab.click();
+            }
+            
+            // Scroll to element
+            setTimeout(() => {
+                result.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                result.element.style.outline = '2px solid var(--core-blue)';
+                setTimeout(() => {
+                    result.element.style.outline = '';
+                }, 2000);
+            }, 300);
+            
+            searchResults.classList.remove('visible');
+        }
+
+        // Clear search
+        function clearSearch() {
+            searchBox.value = '';
+            searchClear.classList.remove('visible');
+            searchResults.classList.remove('visible');
+        }
+
+        // Search box event listeners
+        searchBox.addEventListener('input', function(e) {
+            const query = e.target.value;
+            if (query.length > 0) {
+                searchClear.classList.add('visible');
+            } else {
+                searchClear.classList.remove('visible');
+            }
+            performSearch(query);
+        });
+
+        searchBox.addEventListener('focus', function() {
+            if (this.value.length >= 2) {
+                searchResults.classList.add('visible');
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                searchResults.classList.remove('visible');
+            }
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', function(e) {
+            // Escape key - close metadata panel and search
+            if (e.key === 'Escape') {
+                // Close metadata panels
+                document.querySelectorAll('.node-detail-panel.visible').forEach(panel => {
+                    panel.classList.remove('visible');
+                });
+                
+                // Close search
+                if (searchResults.classList.contains('visible')) {
+                    searchResults.classList.remove('visible');
+                }
+                
+                // Unfocus search box
+                if (document.activeElement === searchBox) {
+                    searchBox.blur();
+                }
+            }
+            
+            // Ctrl/Cmd + K - Focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchBox.focus();
+            }
+            
+            // Space key - toggle code expand (when focused on expand button)
+            if (e.key === ' ' && e.target.classList.contains('code-expand')) {
+                e.preventDefault();
+                e.target.click();
+            }
+        });
+
+        // Update Cytoscape initialization to hide loading spinner
+        const originalInitDeploy = window.initDeployLineage;
+        window.initDeployLineage = function() {
+            originalInitDeploy();
+            // Hide loading spinner after initialization
+            setTimeout(() => {
+                const spinner = document.querySelector('#cy-deploy .lineage-loading');
+                if (spinner) spinner.style.display = 'none';
+            }, 500);
+        };
+
+        const originalInitRuntime = window.initRuntimeLineage;
+        window.initRuntimeLineage = function() {
+            originalInitRuntime();
+            // Hide loading spinner after initialization
+            setTimeout(() => {
+                const spinner = document.querySelector('#cy-runtime .lineage-loading');
+                if (spinner) spinner.style.display = 'none';
+            }, 500);
+        };
+
+        // Improved accessibility - announce dynamic content changes
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            setTimeout(() => announcement.remove(), 1000);
+        }
+
+        // Add screen reader only class
+        const style = document.createElement('style');
+        style.textContent = `
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border-width: 0;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Error handling for Cytoscape
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('cytoscape')) {
+                console.error('Cytoscape error:', e);
+                showToast('⚠️ Error loading graph visualization');
+                
+                // Hide loading spinners
+                document.querySelectorAll('.lineage-loading').forEach(spinner => {
+                    spinner.innerHTML = '<p style="color: var(--status-deprecated);">Failed to load graph</p>';
+                });
+            }
+        });
+
+        console.log('✅ All features loaded successfully');
+        // Back to Top Button
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (backToTop) {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            }
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const panels = document.querySelectorAll('.node-detail-panel.visible');
+                panels.forEach(panel => panel.classList.remove('visible'));
+                clearSearchHighlights();
+            }
+            
+            // Ctrl+K focuses search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                const searchBox = document.getElementById('searchBox');
+                if (searchBox) {
+                    searchBox.focus();
+                    searchBox.select();
+                }
+            }
+        });
+
+        // Search Highlighting
+        let searchHighlightTimeout;
+        
+        function highlightSearchResults(query) {
+            clearSearchHighlights();
+            
+            if (!query || query.length < 2) return;
+            
+            const lowerQuery = query.toLowerCase();
+            
+            // Find and highlight matches
+            document.querySelectorAll('.tab-panel .validation-rule, .tab-panel p, .tab-panel li, .code-body').forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(lowerQuery)) {
+                    element.style.backgroundColor = '#fff9c4';
+                    element.style.transition = 'background-color 0.3s';
+                    element.setAttribute('data-search-match', 'true');
+                }
+            });
+            
+            // Scroll to first match
+            const firstMatch = document.querySelector('[data-search-match="true"]');
+            if (firstMatch) {
+                setTimeout(() => {
+                    firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        }
+        
+        function clearSearchHighlights() {
+            document.querySelectorAll('[data-search-match="true"]').forEach(element => {
+                element.style.backgroundColor = '';
+                element.removeAttribute('data-search-match');
+            });
+        }
+        
+        // Connect to existing search box
+        const searchBoxForHighlight = document.getElementById('searchBox');
+        if (searchBoxForHighlight) {
+            searchBoxForHighlight.addEventListener('input', function(e) {
+                clearTimeout(searchHighlightTimeout);
+                searchHighlightTimeout = setTimeout(() => {
+                    highlightSearchResults(e.target.value);
+                }, 300);
+            });
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            // Use browser's print dialog which respects @media print
+            window.print();
+        }
+
+        // Version Switching
+        function switchVersion(version) {
+            console.log('Switching to version:', version);
+            // In a real implementation, this would:
+            // 1. Fetch version-specific data from API
+            // 2. Update all requirement content
+            // 3. Update metadata, code blocks, validation rules
+            // 4. Reload lineage graphs for that version
+            
+            // For demo: Show notification
+            const message = `Version ${version} selected. In production, this would load version-specific data.`;
+            alert(message);
+            
+            // Example: Update version display in header
+            const versionElements = document.querySelectorAll('.code-version, .data-section-version');
+            versionElements.forEach(el => {
+                el.textContent = el.textContent.replace(/v\d+\.\d+\.\d+/, 'v' + version);
+            });
+        }
+
     </script>
+    <button class="back-to-top" onclick="scrollToTop()" aria-label="Back to top">↑</button>
 </body>
 </html>
